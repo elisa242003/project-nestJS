@@ -12,3 +12,59 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// Definition of States
+model State {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  cities City[]
+}
+
+// Definition of Counties
+model City {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  stateId Int
+  state State @relation(fields: [stateId], references: [id])
+  towns Town[]
+}
+
+// Definition of Towns
+model Town {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  cityId  Int
+  city City @relation(fields: [cityId], references: [id])
+  addresses Address[]
+}
+
+// Definition of Addresses
+model Address {
+  id Int @id @default(autoincrement())
+  townId Int
+  town Town @relation(fields: [townId], references: [id])
+  street String @db.VarChar(100)
+  exteriorNum String @db.VarChar(20)
+  interiorNum String? @db.VarChar(20)
+  postalCode String @db.VarChar(10)
+  clients Client[]
+}
+
+// Definition of Clients
+model Client {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  lastName String @db.VarChar(100)
+  rfc String @db.VarChar(20)
+  addressId Int
+  address Address @relation(fields: [addressId], references: [id])
+  email String @db.VarChar(50)
+  phone String @db.VarChar(20)
+  status ClientStatus @default(ACTIVE)
+}
+
