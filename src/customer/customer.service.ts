@@ -7,7 +7,6 @@ import { Client } from '@prisma/client';
 @Injectable()
 export class CustomerService {
     constructor(private readonly prisma: PrismaService) { }
-
     async create(createCustomerDto: CreateCustomerDto, createAddressDto: CreateAddressDto) {
         return this.prisma.client.create({
             data: {
@@ -17,10 +16,10 @@ export class CustomerService {
                 address: {
                     create: {
                         townId: createAddressDto.townId,
-                        street: createAddressDto.street,
                         exteriorNum: createAddressDto.exteriorNum,
                         interiorNum: createAddressDto.interiorNum,
-                        postalCode: createAddressDto.postalCode
+                        postalCode: createAddressDto.postalCode,
+                        street: createAddressDto.street
                     }
                 },
                 email: createCustomerDto.email,
@@ -30,14 +29,21 @@ export class CustomerService {
         });
     }
     async findAll(): Promise<Client[]> {
-        return this.prisma.client.findMany();
+        return this.prisma.client.findMany({
+            include:{
+                address:true
+            }
+        });
     }
     async findOne(id: number): Promise<Client> {
-        if(!id) throw new NotAcceptableException('Id no proporcionado');
+        if (!id) throw new NotAcceptableException('Id no proporcionado');
         const customer = await this.prisma.client.findUnique({
             where: {
                 id,
             },
+            include:{
+                address:true
+            }
         });
         if (!customer) {
             throw new NotFoundException('Cliente no encontrado');
