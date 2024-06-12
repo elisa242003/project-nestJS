@@ -1,4 +1,4 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CreateAddressDto } from 'src/address/dto/create-address.dto';
@@ -33,13 +33,14 @@ export class CustomerService {
         return this.prisma.client.findMany();
     }
     async findOne(id: number): Promise<Client> {
+        if(!id) throw new NotAcceptableException('Id no proporcionado');
         const customer = await this.prisma.client.findUnique({
             where: {
                 id,
             },
         });
         if (!customer) {
-            throw new NotAcceptableException('Cliente no encontrado');
+            throw new NotFoundException('Cliente no encontrado');
         }
         return customer;
     }
