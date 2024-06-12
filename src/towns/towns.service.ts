@@ -3,14 +3,15 @@ import { CreateTownDto } from './dto/create-town.dto';
 import { UpdateTownDto } from './dto/update-town.dto';
 import { PrismaService } from 'src/prisma.service';
 import { Town } from '@prisma/client';
-import * as removeAccents from 'remove-accents'
+import { remove } from 'remove-accents';
+
 
 @Injectable()
 export class TownsService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createTownDto: CreateTownDto) {
-    const nameTown = removeAccents(createTownDto.name.toLocaleLowerCase());
+    const nameTown = remove(createTownDto.name.toLocaleLowerCase());
 
     const existingTown = await this.prisma.town.findFirst({
       where: {
@@ -21,10 +22,10 @@ export class TownsService {
         cityId: createTownDto.cityId
       },
     });
-    if(existingTown){
+    if (existingTown) {
       throw new NotAcceptableException('La localidad ya existe en este municipio');
     }
-  
+
     return this.prisma.town.create({
       data: {
         name: createTownDto.name,
@@ -44,8 +45,8 @@ export class TownsService {
         id,
       },
     });
-    
-    if(!town){
+
+    if (!town) {
       throw new NotAcceptableException('Localidad no encontrada');
     }
 
@@ -55,7 +56,7 @@ export class TownsService {
   async update(id: number, updateTownDto: UpdateTownDto): Promise<Town> {
     await this.findOne(id);
 
-    const nameTown = removeAccents(updateTownDto.name.toLocaleLowerCase());
+    const nameTown = remove(updateTownDto.name.toLocaleLowerCase());
 
     const existingTown = await this.prisma.town.findFirst({
       where: {
@@ -68,12 +69,12 @@ export class TownsService {
         },
       },
     });
-    if(existingTown){
+    if (existingTown) {
       throw new NotAcceptableException('La localidad ya existe');
     }
 
     return this.prisma.town.update({
-      data: { ...updateTownDto} as any,
+      data: { ...updateTownDto } as any,
       where: {
         id
       },
