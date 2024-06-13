@@ -63,3 +63,10 @@ model Client {
   status Boolean @default(true)
 }
 
+model User {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(50)
+  email String @db.VarChar(50) @unique
+  password String @db.VarChar(100)
+  active Boolean @default(true)
+}
