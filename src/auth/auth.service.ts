@@ -9,19 +9,21 @@ export class AuthService {
         private usersService: UsersService,
         private jwtService: JwtService
     ) { }
-    async validateUser(email: string, pass: string): Promise<any> {
+    async login(email: string, pass: string): Promise<any> {
         const hashPassword = createHash('sha256').update(pass).digest('hex');
         const user = await this.usersService.getUserByEmail(email);
         if (user && user.password === hashPassword) {
-            return user;
+            const payload = { email: user.email, sub: user.id };
+            const jwt = await this.jwtService.signAsync(payload,{
+                secret: process.env.JWT_SECRET,
+                expiresIn: '60s'
+            })
+            console.log(jwt)
+            return {
+                access_token: jwt,
+            };
         }else{
             throw new UnauthorizedException();
         }
-    }
-    async login(user: any) {
-        const payload = { email: user.email, sub: user.id };
-        return {
-            access_token: await this.jwtService.signAsync(payload),
-        };
     }
 }
