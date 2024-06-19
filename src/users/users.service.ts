@@ -7,7 +7,7 @@ import { createHash } from 'crypto';
 export class UsersService {
     constructor(private readonly prisma: PrismaService) { }
     async createUser(data: CreateUserDto) {
-        const pass = createHash('sha256').update(data.password).digest('hex');
+        const pass: string = createHash('sha256').update(data.password).digest('hex');
         return this.prisma.user.create({
             data: {
                 email: data.email,
@@ -25,5 +25,12 @@ export class UsersService {
             throw new NotAcceptableException('User not found');
         }
         return user;
+    }
+    async getAllUsers() {
+        const users =  this.prisma.user.findMany();
+        if (!users) {
+            throw new NotAcceptableException('Users not found');
+        }
+        return users;
     }
 }
