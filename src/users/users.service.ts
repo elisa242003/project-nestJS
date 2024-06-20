@@ -26,11 +26,4 @@ export class UsersService {
         }
         return user;
     }
-    async getAllUsers() {
-        const users =  this.prisma.user.findMany();
-        if (!users) {
-            throw new NotAcceptableException('Users not found');
-        }
-        return users;
-    }
 }

@@ -1,7 +1,6 @@
 
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Public } from 'src/auth/public.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -14,10 +13,5 @@ export class UsersController {
             password,
             active
         });
-    }
-    @Public()
-    @Get('/')
-    async getAllUsers() {
-        return this.usersService.getAllUsers();
     }
 }
