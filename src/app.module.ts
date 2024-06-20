@@ -8,10 +8,25 @@ import { CustomerModule } from './customer/customer.module';
 import { AddressController } from './address/address.controller';
 import { AddressService } from './address/address.service';
 import { AddressModule } from './address/address.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
 
 @Module({
-  imports: [StatesModule, CitiesModule, TownsModule, CustomerModule, AddressModule],
-  controllers: [AppController, AddressController],
-  providers: [AppService, AddressService],
+  imports: [
+    StatesModule,
+    CitiesModule,
+    TownsModule,
+    CustomerModule,
+    AddressModule,
+    AuthModule,
+    UsersModule
+  ],
+  controllers: [
+    AppController,
+    AddressController
+  ],
+  providers: [AppService, AddressService, AuthService],
 })
-export class AppModule {}
+export class AppModule { }
