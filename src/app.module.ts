@@ -10,8 +10,9 @@ import { AddressService } from './address/address.service';
 import { AddressModule } from './address/address.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
+import { LocalStrategy } from './auth/strategies/local.strategy';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -27,6 +28,14 @@ import { AuthService } from './auth/auth.service';
     AppController,
     AddressController
   ],
-  providers: [AppService, AddressService, AuthService],
+  providers: [
+    AppService,
+    AddressService,
+    AuthService,
+    {
+      provide: LocalStrategy,
+      useClass: AuthGuard
+    }
+  ],
 })
 export class AppModule { }

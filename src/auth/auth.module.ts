@@ -22,7 +22,7 @@ import { jwtConstants } from './constants';
     JwtService,
     AuthService,
     PrismaService,
-    UsersService
+    UsersService,
   ],
   controllers: [AuthController],
   exports: [AuthService]
