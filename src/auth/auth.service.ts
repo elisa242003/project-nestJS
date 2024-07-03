@@ -21,7 +21,7 @@ export class AuthService {
         const hashPassword = createHash('sha256').update(pass).digest('hex');
         const user = await this.usersService.getUserByEmail(email);
         if (user && user.password === hashPassword) {
-            const jwt = this.generateToken(user);
+            const jwt = await this.generateToken(user);
             return {
                 user: { email: user.email },
                 access_token: jwt,
